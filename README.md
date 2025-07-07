@@ -34,6 +34,8 @@ Caused by:
 
 ## `async_loop_until_success` macro used for waiting for async operations
 
+> dependency: tokio, tracing
+
 ```rust
 let res = async_loop_until_success!(self.clone().doing_something());
 ```

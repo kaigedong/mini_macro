@@ -69,15 +69,20 @@ macro_rules! here {
 macro_rules! async_loop_until_success {
     ($expr:expr) => {{
         use ::tokio;
+        use ::tracing;
 
         let mut _counter = 0;
         loop {
             let result = $expr.await;
-            if let Ok(res) = result {
-                break res;
-            } else {
-                tokio::time::sleep(tokio::time::Duration::from_secs(_counter)).await;
-                _counter += 1;
+            match result {
+                Ok(res) => break res;
+                Err(e) => {
+                    tokio::time::sleep(tokio::time::Duration::from_secs(_counter)).await;
+                    _counter += 1;
+                    if _counter % 10 == 0 {
+                        tracing::error!(try_count=_counter, "async loop failed with error: {:?}", e)
+                    }
+                }
             }
         }
     }};
