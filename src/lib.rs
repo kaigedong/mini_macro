@@ -60,3 +60,25 @@ macro_rules! here {
         )
     };
 }
+
+/// ## Dynamic formatted message
+/// ```rust
+/// let res = async_loop_until_success!(self.clone().doing_something());
+/// ```
+#[macro_export]
+macro_rules! async_loop_until_success {
+    ($expr:expr) => {{
+        use ::tokio;
+
+        let mut _counter = 0;
+        loop {
+            let result = $expr.await;
+            if let Ok(res) = result {
+                break res;
+            } else {
+                tokio::time::sleep(tokio::time::Duration::from_secs(_counter)).await;
+                _counter += 1;
+            }
+        }
+    }};
+}
