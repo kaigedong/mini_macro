@@ -1,4 +1,4 @@
-- log backtracing
+## `here!()` macro used for log backtracing
 
 ```rust
 use anyhow::{Context, Result, anyhow};
@@ -30,4 +30,10 @@ Caused by:
     0: src/main.rs:9:35: FailedInside1, msg
     1: src/main.rs:5:38
     2: ErrHere1
+```
+
+## `async_loop_until_success` macro used for waiting for async operations
+
+```rust
+let res = async_loop_until_success!(self.clone().doing_something());
 ```
